@@ -1,0 +1,53 @@
+# Python-related files
+__pycache__/          # Compiled Python files
+*.py[cod]             # Compiled Python extensions
+*.pyo                 # Optimized Python files
+*.pyd                 # Windows Python DLL files
+*.env                 # Environment variables file
+*.venv                # Virtual environment folder
+*.egg                 # Python egg files
+*.egg-info/           # Python egg metadata
+dist/                 # Distribution folder
+build/                # Build folder
+*.log                 # Log files
+
+# Data-related files
+data/raw/             # Raw data files
+data/processed/       # Processed data files
+*.csv                 # CSV files
+*.parquet             # Parquet files
+*.json                # JSON files
+
+# Environment configuration
+.env                  # Environment variables file
+*.ini                 # Configuration files
+*.cfg                 # Configuration files
+
+# IDE-related files
+.vscode/              # Visual Studio Code settings
+.idea/                # JetBrains IDE settings
+*.swp                 # Swap files (e.g., Vim)
+
+# OS-generated files
+.DS_Store             # macOS Finder metadata
+Thumbs.db             # Windows thumbnail cache
+
+# Docker-related files
+*.pid                 # PID files
+*.log                 # Log files
+docker-compose.override.yml # Local Docker Compose overrides
+
+# Jupyter Notebook
+.ipynb_checkpoints/   # Jupyter Notebook checkpoints
+*.ipynb               # Jupyter Notebook files
+
+# Terraform
+.terraform/           # Terraform state folder
+*.tfstate             # Terraform state files
+*.tfstate.backup      # Terraform state backup files
+
+# Node.js (if applicable)
+node_modules/         # Node.js dependencies
+npm-debug.log*        # NPM debug logs
+yarn-debug.log*       # Yarn debug logs
+yarn-error.log*       # Yarn error logs
