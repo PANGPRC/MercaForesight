@@ -1,0 +1,12 @@
+version: "1"
+context:
+  active-host: "rk505.us1.dbt.com"
+  active-project: "70471823461862"
+projects:
+  - project-name: "swe5003_project"
+    project-id: "70471823461862"
+    account-name: "NUS"
+    account-id: "70471823455066"
+    account-host: "rk505.us1.dbt.com"
+    token-name: "cloud-cli-c1a5"
+    token-value: "dbtu_4zIp9wE-bP7-ITUfbPehmqNms73rIBu7oZ6qyVCrJSQRuWLZkY"
