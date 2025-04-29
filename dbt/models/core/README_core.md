@@ -1,4 +1,4 @@
-# **Core Models**
+# MercaForesight - Core Models
 
 ## **Directory Overview**
 The `core` directory contains essential business models that support key business analyses and metric calculations. Each model file serves a specific purpose, generating clear analytical results based on raw data.

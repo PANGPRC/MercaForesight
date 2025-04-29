@@ -1,4 +1,4 @@
-# DBT Models
+# MercaForesight - DBT Models
 
 ## **Directory Overview**
 This folder contains files related to DBT (Data Build Tool) for data modeling, transformation, and analytics. DBT is used to build modular, maintainable, and reusable data pipelines.
@@ -28,8 +28,6 @@ This folder contains files related to DBT (Data Build Tool) for data modeling, t
 ## **Key Features**
 - **Data Transformation**: Transform raw data into clean, analysis-ready datasets.
 - **Modular Design**: Models are organized into logical layers (`staging`, `core`) for better maintainability.
-- **Testing**: Built-in tests (`not_null`, `unique`, etc.) and custom tests ensure data quality.
-- **Reusability**: Macros and seeds enable consistent and reusable transformations.
 
 ---
 
@@ -41,8 +39,6 @@ This folder contains files related to DBT (Data Build Tool) for data modeling, t
 
 ### 2. **Run DBT Commands**
 - `dbt run`: Executes all models and materializes them in the database.
-- `dbt test`: Runs tests to validate data quality.
-- `dbt seed`: Loads static data from the `seeds/` directory into the database.
 - `dbt docs generate`: Generates documentation for the project.
 - `dbt docs serve`: Serves the documentation locally for exploration.
 

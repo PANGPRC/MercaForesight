@@ -1,4 +1,4 @@
-# **Staging Models**
+# MercaForesight - Staging Models
 
 ## **Directory Overview**
 The `staging` directory contains intermediate models that serve as a bridge between raw data and core business models. These models are used to clean, standardize, and prepare data for further analysis in the `core` directory.
@@ -6,9 +6,9 @@ The `staging` directory contains intermediate models that serve as a bridge betw
 ---
 
 ## **Purpose**
-- Transform raw data into a standardized format.
-- Apply basic cleaning and validation rules.
-- Create reusable datasets for core business models.
+- Transform raw data into a standardized format for analysis.
+- Apply basic cleaning, validation, and enrichment rules.
+- Create reusable datasets to support core business models and downstream analytics.
 
 ---
 
@@ -85,5 +85,9 @@ The `staging` directory contains intermediate models that serve as a bridge betw
 
 3. **Performance Optimization**:
    - Use efficient SQL transformations to minimize processing time.
+   - Avoid unnecessary joins or subqueries to improve performance.
+
+4. **Documentation**:
+   - Maintain clear and up-to-date documentation for each model, including its purpose, dependencies, and key fields.
 
 ---

@@ -1,4 +1,4 @@
-# Data Directory
+# MercaForesight - Data Directory
 
 This folder is used to store project-related data files, including raw and processed data.
 
@@ -9,3 +9,5 @@ This folder is used to store project-related data files, including raw and proce
 ## Notes
 - Do not commit sensitive or large data files to version control.
 - Ensure data files are properly documented with metadata when applicable.
+
+---
