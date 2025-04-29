@@ -1,0 +1,146 @@
+version: 2
+
+common_columns:
+  id: &id
+    type: INTEGER
+    description: Unique identifier for the entity.
+  price: &price
+    type: FLOAT64
+    description: Price of the product in USD.
+  status: &status
+    type: STRING
+    description: Current status of the entity (e.g., 'active', 'completed').
+  address: &address
+    - name: city
+      type: STRING
+      description: City where the entity resides.
+    - name: country
+      type: STRING
+      description: Country where the entity resides.
+    - name: state
+      type: STRING
+      description: State where the entity resides.
+    - name: street
+      type: STRING
+      description: Street address of the entity.
+    - name: zipcode
+      type: STRING
+      description: Zip code of the entity's address.
+
+sources:
+  - name: staging
+    database: arctic-surf-456413-f0
+    schema: terraform_bigquery
+    tables:
+      - name: dim_customer
+        columns:
+          - name: customer_id
+            <<: *id
+          - name: email
+            type: STRING
+            description: Email address of the customer.
+          - name: first_name
+            type: STRING
+            description: First name of the customer.
+          - name: last_name
+            type: STRING
+            description: Last name of the customer.
+          - name: segment
+            type: STRING
+            description: Customer segment or category.
+          - <<: *address
+
+      - name: dim_department
+        columns:
+          - name: department_id
+            <<: *id
+          - name: department_name
+            type: STRING
+            description: Name of the department.
+          - name: market_category
+            type: STRING
+            description: Market category associated with the department.
+
+      - name: dim_order
+        columns:
+          - name: order_id
+            <<: *id
+          - name: order_customer_id
+            type: INTEGER
+            description: Unique identifier for the customer associated with the order.
+          - name: order_item_id
+            type: INTEGER
+            description: Unique identifier for the order item.
+          - name: product_card_id
+            <<: *id
+          - name: department_id
+            <<: *id
+          - name: order_date
+            type: STRING
+            description: Date when the order was placed.
+          - name: discount_amount
+            type: FLOAT64
+            description: Discount amount applied to the order item.
+          - name: discount_rate
+            type: FLOAT64
+            description: Discount rate applied to the order item.
+          - name: order_price
+            <<: *price
+          - name: profit_ratio
+            type: FLOAT64
+            description: Profit ratio for the order item.
+          - name: quantity
+            type: INTEGER
+            description: Quantity of the product in the order item.
+          - name: sales_per_customer
+            type: FLOAT64
+            description: Total sales amount per customer.
+          - name: total_sales
+            <<: *price
+          - name: item_total
+            <<: *price
+          - name: profit_per_order
+            type: FLOAT64
+            description: Profit amount for the order.
+          - name: order_status
+            <<: *status
+
+      - name: dim_product
+        columns:
+          - name: product_id
+            <<: *id
+          - name: category_id
+            <<: *id
+          - name: category_name
+            type: STRING
+            description: Name of the product category.
+          - name: description
+            type: STRING
+            description: Detailed description of the product.
+          - name: image_url
+            type: STRING
+            description: URL of the product image.
+          - name: product_name
+            type: STRING
+            description: Name of the product.
+          - name: product_price
+            <<: *price
+          - name: product_status
+            <<: *status
+
+      - name: dim_shipping
+        columns:
+          - name: shipping_date
+            type: STRING
+            description: Date when the product was shipped.
+          - name: actual_shipping_days
+            type: INTEGER
+            description: Actual number of days taken for shipping.
+          - name: scheduled_shipping_days
+            type: INTEGER
+            description: Scheduled number of days for shipping.
+          - name: mode
+            type: STRING
+            description: Mode of shipping (e.g., 'air', 'ground').
+          - name: delivery_status
+            <<: *status
