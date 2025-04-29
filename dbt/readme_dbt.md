@@ -23,6 +23,10 @@ This folder contains files related to DBT (Data Build Tool) for data modeling, t
 ### 2. **`macros/`**
 - **Purpose**: Contains reusable SQL macros to simplify and standardize transformations across models.
 
+### 3. **`config/`**
+- **Purpose**: Stores configuration files, such as `dbt_project.yml` and other settings required for DBT to run properly.
+- **Usage**: Define project-level configurations, such as model materialization settings, target profiles, and folder paths.
+
 ---
 
 ## **Key Features**
