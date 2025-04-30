@@ -7,7 +7,8 @@ sed -i 's/\r//' "$0"
 SPARK_VERSION="3.3.1"
 HADOOP_VERSION="3"
 JUPYTERLAB_VERSION="3.6.1"
-CURRENT_PATH="./docker/spark/"
+PROJECT_ROOT="$(pwd)"
+CURRENT_PATH="${PROJECT_ROOT}/infra/docker/spark/"
 
 # -- Building the Images
 
