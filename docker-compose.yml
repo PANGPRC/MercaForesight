@@ -25,23 +25,25 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 
-  mysql:
-    image: mysql:8.0
-    container_name: mysql
+  postgres:
+    image: postgres:14
+    container_name: postgres
     environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: supply_chain
+      POSTGRES_DB: mercaforesight
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     ports:
-      - "3306:3306"
+      - "5432:5432"
     volumes:
-      - ./data/supply_chain_database.sql:/docker-entrypoint-initdb.d/supply_chain_database.sql
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d
 
   debezium:
     image: debezium/connect:2.0
     container_name: debezium
     depends_on:
       - kafka
-      - mysql
+      - postgres
     ports:
       - "8083:8083"
     environment:
@@ -72,6 +74,7 @@ services:
       - SPARK_RPC_ENCRYPTION_ENABLED=no
       - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
       - SPARK_SSL_ENABLED=no
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/credentials/gcs-credentials.json
 
   spark-worker:
     image: bitnami/spark:3.3.1
@@ -87,10 +90,14 @@ services:
       - SPARK_RPC_ENCRYPTION_ENABLED=no
       - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
       - SPARK_SSL_ENABLED=no
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/credentials/gcs-credentials.json
     volumes:
       - ./src:/app/src
       - ./data:/app/data
       - ./credentials:/app/credentials
+
+volumes:
+  postgres_data:
 
 networks:
   default:

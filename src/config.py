@@ -12,13 +12,19 @@ class Config:
         GROUP_ID = os.getenv('KAFKA_GROUP_ID', 'merca_foresight')
         AUTO_OFFSET_RESET = os.getenv('KAFKA_AUTO_OFFSET_RESET', 'earliest')
 
-    class Database:
-        """Database configuration"""
-        HOST = os.getenv('DB_HOST', 'localhost')
-        PORT = int(os.getenv('DB_PORT', '3306'))
-        DATABASE = os.getenv('DB_NAME', 'supply_chain')
-        USERNAME = os.getenv('DB_USER', 'root')
-        PASSWORD = os.getenv('DB_PASSWORD', 'password')
+    class Postgres:
+        """PostgreSQL configuration"""
+        HOST = os.getenv('POSTGRES_HOST', 'localhost')
+        PORT = int(os.getenv('POSTGRES_PORT', '5432'))
+        DATABASE = os.getenv('POSTGRES_DB', 'mercaforesight')
+        USERNAME = os.getenv('POSTGRES_USER', 'postgres')
+        PASSWORD = os.getenv('POSTGRES_PASSWORD', 'postgres')
+
+    class BigQuery:
+        """BigQuery configuration"""
+        PROJECT = os.getenv('BIGQUERY_PROJECT', 'mercaforesight')
+        DATASET = os.getenv('BIGQUERY_DATASET', 'supply_chain')
+        LOCATION = os.getenv('BIGQUERY_LOCATION', 'US')
 
     class GCS:
         """Google Cloud Storage configuration"""
@@ -122,6 +128,7 @@ class Config:
 
 # For backward compatibility
 kafka = Config.Kafka
-database = Config.Database
+postgres = Config.Postgres
+bigquery = Config.BigQuery
 gcs = Config.GCS
 spark = Config.Spark 
