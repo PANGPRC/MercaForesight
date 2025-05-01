@@ -4,6 +4,9 @@
 
 This directory contains pipelines designed for batch processing large datasets. These pipelines handle tasks like transforming data extracted from sources (potentially GCS where streaming data lands) and loading it into analytical stores like BigQuery.
 
+![image](https://github.com/user-attachments/assets/6f097d1c-bc6e-4e8a-a4b7-601c60066a79)
+
+
 ## Key Pipelines
 
 1.  **GCS Export Pipeline (`gcs_export_pipeline`)**
