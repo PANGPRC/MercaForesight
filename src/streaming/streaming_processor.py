@@ -1,6 +1,6 @@
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import window, avg, sum, count, col, from_json, to_timestamp
-from pyspark.sql.types import StructType, StringType, DoubleType, TimestampType, StructField
+from pyspark.sql.functions import window, avg, sum, count, col, from_json, to_timestamp, when, countDistinct
+from pyspark.sql.types import StructType, StringType, DoubleType, TimestampType, StructField, IntegerType
 import logging
 from typing import Dict, Any, Optional
 from datetime import datetime, timedelta
@@ -16,39 +16,48 @@ logger = logging.getLogger(__name__)
 class StreamingProcessor:
     """Processes streaming data with real-time analytics"""
     
-    def __init__(self, spark: Optional[SparkSession] = None):
-        self.spark = spark or self._create_spark_session()
-        self.queries = {}
-        self._setup_streaming_schema()
-
-    def _create_spark_session(self) -> SparkSession:
-        """Create and configure Spark session for streaming"""
-        return SparkSession.builder \
+    def __init__(self):
+        self.spark = SparkSession.builder \
             .appName("MercaForesightStreaming") \
-            .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.3.1") \
             .getOrCreate()
+        self.streams = {}
+        self._setup_streaming_schema()
 
     def _setup_streaming_schema(self) -> None:
         """Define schemas for different streaming data types"""
         self.schemas = {
-            'orders': StructType([
-                StructField("order_id", StringType(), True),
-                StructField("customer_id", StringType(), True),
-                StructField("order_date", TimestampType(), True),
-                StructField("total_amount", DoubleType(), True),
-                StructField("status", StringType(), True)
+            'products': StructType([
+                StructField("product_id", IntegerType(), True),
+                StructField("category_id", IntegerType(), True),
+                StructField("category_name", StringType(), True),
+                StructField("description", StringType(), True),
+                StructField("image_url", StringType(), True),
+                StructField("product_name", StringType(), True),
+                StructField("product_price", DoubleType(), True),
+                StructField("product_status", StringType(), True),
+                StructField("last_updated", TimestampType(), True)
             ]),
-            'inventory': StructType([
-                StructField("product_id", StringType(), True),
-                StructField("quantity", DoubleType(), True),
-                StructField("timestamp", TimestampType(), True),
-                StructField("warehouse_id", StringType(), True)
+            'customers': StructType([
+                StructField("customer_id", IntegerType(), True),
+                StructField("email", StringType(), True),
+                StructField("first_name", StringType(), True),
+                StructField("last_name", StringType(), True),
+                StructField("segment", StringType(), True),
+                StructField("city", StringType(), True),
+                StructField("country", StringType(), True),
+                StructField("state", StringType(), True),
+                StructField("street", StringType(), True),
+                StructField("zipcode", StringType(), True),
+                StructField("last_updated", TimestampType(), True)
             ]),
-            'pricing': StructType([
-                StructField("product_id", StringType(), True),
-                StructField("price", DoubleType(), True),
-                StructField("timestamp", TimestampType(), True),
-                StructField("market", StringType(), True)
+            'access_records': StructType([
+                StructField("record_id", IntegerType(), True),
+                StructField("customer_id", IntegerType(), True),
+                StructField("product_id", IntegerType(), True),
+                StructField("access_time", TimestampType(), True),
+                StructField("access_type", StringType(), True),
+                StructField("session_duration", IntegerType(), True),
+                StructField("device_type", StringType(), True)
             ])
         }
 
@@ -74,121 +83,52 @@ class StreamingProcessor:
             logger.error(f"Error creating stream: {e}")
             raise
 
-    def process_orders(self) -> None:
-        """Process order data with real-time analytics"""
+    def process_stream(self, topic: str) -> None:
+        """Process the streaming data with real-time analytics"""
         try:
-            orders_df = self.streams['orders']
+            df = self.streams[topic]
             
-            # Calculate real-time metrics
-            metrics = orders_df \
-                .withWatermark("order_date", "1 hour") \
-                .groupBy(
-                    window("order_date", "5 minutes"),
-                    "status"
-                ) \
-                .agg(
-                    count("order_id").alias("order_count"),
-                    sum("total_amount").alias("total_sales"),
-                    avg("total_amount").alias("avg_order_value")
-                )
-
-            # Write to GCS
-            query = metrics.writeStream \
-                .format("parquet") \
-                .option("path", f"gs://{Config.gcs.BUCKET_NAME}/streaming/orders/") \
-                .option("checkpointLocation", "checkpoints/orders") \
-                .outputMode("append") \
+            if topic == 'products':
+                # Product analytics
+                df = df.withWatermark("last_updated", "1 minute") \
+                    .groupBy("category_id", "category_name") \
+                    .agg(
+                        count("product_id").alias("product_count"),
+                        avg("product_price").alias("avg_price"),
+                        count(when(col("product_status") == "active", 1)).alias("active_products")
+                    )
+            
+            elif topic == 'customers':
+                # Customer analytics
+                df = df.withWatermark("last_updated", "1 minute") \
+                    .groupBy("segment") \
+                    .agg(
+                        count("customer_id").alias("customer_count"),
+                        countDistinct("city").alias("cities_covered"),
+                        countDistinct("country").alias("countries_covered")
+                    )
+            
+            elif topic == 'access_records':
+                # Access record analytics
+                df = df.withWatermark("access_time", "1 minute") \
+                    .groupBy("product_id", "access_type") \
+                    .agg(
+                        count("record_id").alias("access_count"),
+                        avg("session_duration").alias("avg_session_duration"),
+                        countDistinct("customer_id").alias("unique_customers")
+                    )
+            
+            # Write to console for demonstration
+            query = df.writeStream \
+                .outputMode("update") \
+                .format("console") \
                 .start()
-
-            self.queries['orders'] = query
-            logger.info("Started order processing stream")
-        except Exception as e:
-            logger.error(f"Error processing orders: {e}")
-            raise
-
-    def process_inventory(self) -> None:
-        """Process inventory data with real-time analytics"""
-        try:
-            inventory_df = self.streams['inventory']
             
-            # Calculate inventory metrics
-            metrics = inventory_df \
-                .withWatermark("timestamp", "1 hour") \
-                .groupBy(
-                    window("timestamp", "15 minutes"),
-                    "warehouse_id",
-                    "product_id"
-                ) \
-                .agg(
-                    sum("quantity").alias("total_quantity"),
-                    count("product_id").alias("update_count")
-                )
-
-            # Write to GCS
-            query = metrics.writeStream \
-                .format("parquet") \
-                .option("path", f"gs://{Config.gcs.BUCKET_NAME}/streaming/inventory/") \
-                .option("checkpointLocation", "checkpoints/inventory") \
-                .outputMode("append") \
-                .start()
-
-            self.queries['inventory'] = query
-            logger.info("Started inventory processing stream")
-        except Exception as e:
-            logger.error(f"Error processing inventory: {e}")
-            raise
-
-    def process_pricing(self) -> None:
-        """Process pricing data with real-time analytics"""
-        try:
-            pricing_df = self.streams['pricing']
+            query.awaitTermination()
             
-            # Calculate pricing metrics
-            metrics = pricing_df \
-                .withWatermark("timestamp", "1 hour") \
-                .groupBy(
-                    window("timestamp", "5 minutes"),
-                    "product_id",
-                    "market"
-                ) \
-                .agg(
-                    avg("price").alias("avg_price"),
-                    count("product_id").alias("price_updates")
-                )
-
-            # Write to GCS
-            query = metrics.writeStream \
-                .format("parquet") \
-                .option("path", f"gs://{Config.gcs.BUCKET_NAME}/streaming/pricing/") \
-                .option("checkpointLocation", "checkpoints/pricing") \
-                .outputMode("append") \
-                .start()
-
-            self.queries['pricing'] = query
-            logger.info("Started pricing processing stream")
         except Exception as e:
-            logger.error(f"Error processing pricing: {e}")
+            logger.error(f"Error processing stream: {e}")
             raise
-
-    def start_all_streams(self) -> None:
-        """Start all streaming processes"""
-        try:
-            self.process_orders()
-            self.process_inventory()
-            self.process_pricing()
-            
-            # Wait for all streams to terminate
-            for query in self.queries.values():
-                query.awaitTermination()
-        except Exception as e:
-            logger.error(f"Error in streaming processes: {e}")
-            raise
-
-    def stop_all_streams(self) -> None:
-        """Stop all streaming processes"""
-        for name, query in self.queries.items():
-            query.stop()
-            logger.info(f"Stopped stream: {name}")
 
 def main():
     """Example usage of the StreamingProcessor"""
@@ -196,17 +136,17 @@ def main():
         processor = StreamingProcessor()
         
         # Create streams
-        processor.create_stream("orders", "orders")
-        processor.create_stream("inventory", "inventory")
-        processor.create_stream("pricing", "pricing")
+        processor.create_stream("products", "products")
+        processor.create_stream("customers", "customers")
+        processor.create_stream("access_records", "access_records")
         
         # Start processing
-        processor.start_all_streams()
+        processor.process_stream("products")
+        processor.process_stream("customers")
+        processor.process_stream("access_records")
     except Exception as e:
         logger.error(f"Error in main: {e}")
         raise
-    finally:
-        processor.stop_all_streams()
 
 if __name__ == "__main__":
     main() 
