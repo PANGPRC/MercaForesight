@@ -62,6 +62,44 @@ Data is ingested into the system through:
 2. **Kafka**: Handles real-time data ingestion from streaming sources.
 3. **Debezium**: Captures and ingests database changes from MySQL.
 
+### Build & Run Commands
+
+#### 1. Start Infrastructure Services
+```bash
+# Start Kafka and Zookeeper
+docker-compose -f infra/docker/kafka/docker-compose.yml up -d
+
+# Start MySQL with CDC enabled
+docker-compose -f infra/docker/mysql/docker-compose.yml up -d
+
+# Start Debezium
+docker-compose -f infra/docker/debezium/docker-compose.yml up -d
+```
+
+#### 2. Run Data Ingestion
+```bash
+# Run csv ingestion (CSV files)
+python src/batch/gcs_export_pipeline/pipeline.py
+
+# Run streaming ingestion (Kafka)
+python src/streaming/kafka_to_gcs_streaming/streaming_pipeline.py
+
+# Start CDC ingestion
+python src/ingestion/cdc_manager.py
+```
+
+#### 3. Monitor Ingestion
+```bash
+# Check Kafka topics
+docker exec -it kafka kafka-topics.sh --list --bootstrap-server localhost:9092
+
+# Monitor Debezium connectors
+curl -X GET http://localhost:8083/connectors
+
+# View ingestion logs
+docker-compose -f infra/docker/logs/docker-compose.yml up -d
+```
+
 ## Visualization
 
 Run superset
