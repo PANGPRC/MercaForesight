@@ -51,3 +51,10 @@ Login
 username: admin
 password: admin
 ```
+
+Result
+
+![business-scale-summary](assets/business-scale-summary.png)
+![sales-performance](assets/sales-performance.png)
+![execution-pipeline](assets/execution-pipeline.png)
+![portfolio-optimization](assets/portfolio-optimization.png)
