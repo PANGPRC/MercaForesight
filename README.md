@@ -100,6 +100,25 @@ curl -X GET http://localhost:8083/connectors
 docker-compose -f infra/docker/logs/docker-compose.yml up -d
 ```
 
+#### 4. Run DBT Commands
+```bash
+# Install DBT
+pip install dbt-core dbt-bigquery
+
+# Configure profiles.yml to connect to your database
+
+# Run all models
+dbt run
+
+# Generate documentation
+dbt docs generate
+
+# Serve documentation locally
+dbt docs serve
+```
+
+Note: Make sure to configure your `profiles.yml` file with the correct database connection settings before running DBT commands.
+
 ## Visualization
 
 Run superset
