@@ -46,6 +46,22 @@ The project focuses on:
 
 For more details, refer to the `README` files in each subdirectory.
 
+## Data Sources
+
+The system integrates with three types of data sources:
+
+1. **CSV Files**: Raw data files containing historical business data.
+2. **Real-time Stream API**: Simulated real-time data streams for continuous data flow.
+3. **MySQL Database**: Operational database with change data capture enabled.
+
+## Data Ingestion
+
+Data is ingested into the system through:
+
+1. **Spark**: Used for loading and ingesting CSV files into the data lake.
+2. **Kafka**: Handles real-time data ingestion from streaming sources.
+3. **Debezium**: Captures and ingests database changes from MySQL.
+
 ## Visualization
 
 Run superset
