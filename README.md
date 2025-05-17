@@ -1,7 +1,5 @@
 # MercaForesight
 
-*Be patient.*
-
 MercaForesight is an intelligent analytics platform designed for e-commerce platforms and operations teams, aiming to optimize business decisions through data-driven insights.
 
 ## Contact
@@ -15,11 +13,60 @@ MercaForesight is an intelligent analytics platform designed for e-commerce plat
 | Wen Mingyuan | e1352990@u.nus.edu   |
 | Zhang Yiheng | e1349382@u.nus.edu   |
 
-## Project Overview
-The project focuses on:
-- SKU performance analysis and optimization.
-- Dynamic inventory management.
-- Real-time financial and order insights.
+## Prerequisites
+
+### Cloud Resources
+1. **Google Cloud Storage (GCS)**
+   - Create a GCS bucket for data storage
+   - Configure bucket permissions and lifecycle policies
+   - Service account with Storage Admin role (`roles/storage.admin`)
+   - Download service account key and save as `credentials/gcs-credentials.json`
+
+2. **BigQuery**
+   - Create a BigQuery project and dataset
+   - Configure dataset permissions
+   - Service account with BigQuery Admin role (`roles/bigquery.admin`)
+   - Ensure the same service account key has BigQuery access
+
+3. **Mage**
+   - Set up Mage cloud instance
+   - Configure project settings and environment variables
+   - Set up data pipeline connections
+   - Configure monitoring and alerting
+   - Access UI at http://localhost:6789 (local development)
+   - Configure environment variables in `.env` file
+
+### Local Development Environment
+1. **Docker & Docker Compose**
+   - Docker Engine 20.10.0+
+   - Docker Compose 2.0.0+
+
+2. **Python Environment**
+   - Python 3.8+
+   - Required Python packages:
+     ```bash
+     pip install -r requirements.txt
+     ```
+
+3. **Database**
+   - PostgreSQL 14.0+ (for local development)
+   - MySQL 8.0+ (for production)
+
+4. **Message Queue**
+   - Apache Kafka 7.3.0+ (Confluent Platform)
+   - Zookeeper 7.3.0+ (Confluent Platform)
+
+5. **Data Processing**
+   - Apache Spark 3.3.1+
+   - DBT Core 1.0.0+
+   - Debezium 2.0+
+
+### Infrastructure Services
+The following services will be automatically set up using Docker Compose:
+- Kafka & Zookeeper
+- PostgreSQL
+- Debezium
+- Spark (Master & Worker)
 
 ## Project Structure
 
