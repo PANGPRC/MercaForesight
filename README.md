@@ -4,6 +4,17 @@
 
 MercaForesight is an intelligent analytics platform designed for e-commerce platforms and operations teams, aiming to optimize business decisions through data-driven insights.
 
+## Contact
+
+| Name          | Email                |
+| ------------- | -------------------- |
+| Pang Yuntian | e1348859@u.nus.edu   |
+| Li Zehan     | e1391133@u.nus.edu   |
+| Zhang Shize  | e1351522@u.nus.edu   |
+| Chen Bingxu  | chenbingxu@u.nus.edu |
+| Wen Mingyuan | e1352990@u.nus.edu   |
+| Zhang Yiheng | e1349382@u.nus.edu   |
+
 ## Project Overview
 The project focuses on:
 - SKU performance analysis and optimization.
@@ -15,6 +26,7 @@ The project focuses on:
 | Path                       | Description                                      |
 |----------------------------|--------------------------------------------------|
 | `.github/workflows/`       | CI/CD configuration files                        |
+| `assets/`                  | Static files and miscellaneous project assets    |
 | `data/`                    | Data storage directory                           |
 | `data/raw/`                | Raw, unprocessed data files                      |
 | `data/processed/`          | Processed, cleaned, and aggregated data files    |
