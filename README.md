@@ -19,13 +19,13 @@ MercaForesight is an intelligent analytics platform designed for e-commerce plat
 1. **Google Cloud Storage (GCS)**
    - Create a GCS bucket for data storage
    - Configure bucket permissions and lifecycle policies
-   - Service account with Storage Admin role (`roles/storage.admin`)
-   - Download service account key and save as `credentials/gcs-credentials.json`
+   - Service account with Storage Admin role
+   - Download service account key and save as `gcs-credentials.json`
 
 2. **BigQuery**
    - Create a BigQuery project and dataset
    - Configure dataset permissions
-   - Service account with BigQuery Admin role (`roles/bigquery.admin`)
+   - Service account with BigQuery Admin role
    - Ensure the same service account key has BigQuery access
 
 3. **Mage**
