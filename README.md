@@ -43,18 +43,14 @@ MercaForesight is an intelligent analytics platform designed for e-commerce plat
 
 2. **Python Environment**
    - Python 3.8+
-   - Required Python packages:
-     ```bash
-     pip install -r requirements.txt
-     ```
 
 3. **Database**
-   - PostgreSQL 14.0+ (for local development)
-   - MySQL 8.0+ (for production)
+   - PostgreSQL 14.0+
+   - MySQL 8.0+
 
 4. **Message Queue**
-   - Apache Kafka 7.3.0+ (Confluent Platform)
-   - Zookeeper 7.3.0+ (Confluent Platform)
+   - Apache Kafka 7.3.0+
+   - Zookeeper 7.3.0+
 
 5. **Data Processing**
    - Apache Spark 3.3.1+
