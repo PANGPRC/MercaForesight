@@ -33,3 +33,21 @@ The project focuses on:
 | `tests/`                   | Test code                                        |
 
 For more details, refer to the `README` files in each subdirectory.
+
+## Visualization
+
+Run superset
+
+```bash
+git clone https://github.com/apache/superset
+cd superset
+git checkout tags/4.1.2
+docker compose -f docker-compose-image-tag.yml up
+```
+
+Login
+
+```
+username: admin
+password: admin
+```
